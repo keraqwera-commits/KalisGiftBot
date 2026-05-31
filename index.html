@@ -1,0 +1,286 @@
+here <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalis Gift — Кейсы</title>
+    <style>
+        body {
+            background-color: #141b24;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding-bottom: 40px;
+            -webkit-user-select: none; user-select: none;
+        }
+
+        .profile-header {
+            width: 90%; max-width: 450px;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 20px;
+        }
+
+        .user-name { font-size: 18px; font-weight: bold; }
+        .user-sub { font-size: 13px; color: #8a99a8; }
+
+        .balance-container {
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .stars-balance {
+            background: #24313f; padding: 8px 14px; border-radius: 20px;
+            font-weight: bold; color: #ffb900; border: 1px solid rgba(255, 185, 0, 0.2);
+        }
+
+        .deposit-btn {
+            background: #2481cc; border: none; color: white;
+            padding: 8px 12px; border-radius: 20px; font-size: 13px;
+            font-weight: bold; cursor: pointer;
+        }
+
+        .app-title {
+            font-size: 26px; font-weight: 800; color: #b536e0;
+            text-shadow: 0 0 15px rgba(181, 54, 224, 0.4); margin: 20px 0 5px 0;
+        }
+
+        .promo-banner {
+            width: 90%; max-width: 420px;
+            background: linear-gradient(90deg, #b536e0, #2481cc);
+            text-align: center; padding: 12px 0; border-radius: 12px;
+            font-weight: bold; font-size: 14px; margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .cases-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr);
+            gap: 15px; width: 92%; max-width: 440px;
+        }
+
+        .case-item {
+            background: #202b36; border-radius: 18px; padding: 20px 10px;
+            text-align: center; position: relative;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3); cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .case-item:active { transform: scale(0.96); }
+
+        .color-green { border: 2px solid #34c759; box-shadow: 0 0 15px rgba(52, 199, 89, 0.2); }
+        .color-blue { border: 2px solid #007aff; box-shadow: 0 0 15px rgba(0, 122, 255, 0.2); }
+        .color-purple { border: 2px solid #b536e0; box-shadow: 0 0 15px rgba(181, 54, 224, 0.3); }
+        .color-gold { border: 2px solid #ffcc00; box-shadow: 0 0 20px rgba(255, 204, 0, 0.3); }
+        .color-fire { border: 2px solid #ff3b30; box-shadow: 0 0 25px rgba(255, 59, 48, 0.4); }
+
+        @keyframes shake {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            20% { transform: translate(-2px, -1px) rotate(-1deg); }
+            40% { transform: translate(-1px, 2px) rotate(1deg); }
+            60% { transform: translate(1px, -1px) rotate(0deg); }
+            80% { transform: translate(-2px, 1px) rotate(-1deg); }
+            100% { transform: translate(1px, -2px) rotate(0deg); }
+        }
+        .shaking { animation: shake 0.4s infinite !important; }
+
+        .badge {
+            position: absolute; top: 10px; right: 10px;
+            font-size: 10px; font-weight: bold; padding: 3px 7px; border-radius: 6px;
+        }
+        .bg-green { background: #34c759; }
+        .bg-blue { background: #007aff; }
+        .bg-purple { background: #b536e0; }
+        .bg-gold { background: #ffcc00; color: #000; }
+        .bg-fire { background: #ff3b30; }
+
+        .case-name { font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .case-img { font-size: 60px; margin: 10px 0; display: inline-block; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+        .case-cost { font-size: 16px; font-weight: bold; color: #ffc107; }
+
+        .prize-popup {
+            display: none; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 15, 20, 0.98); z-index: 1000;
+            flex-direction: column; align-items: center; justify-content: center;
+        }
+        .popup-emoji { font-size: 110px; margin: 25px 0; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .popup-name { font-size: 26px; font-weight: bold; margin-bottom: 5px; text-align: center; }
+        .popup-worth { font-size: 16px; color: #ffc107; margin-bottom: 35px; }
+        .take-btn {
+            background: #2481cc; border: none; color: white;
+            padding: 15px 70px; font-size: 16px; font-weight: bold;
+            border-radius: 25px; cursor: pointer; box-shadow: 0 4px 15px rgba(36, 129, 204, 0.4);
+        }
+        @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <div class="user-info">
+            <div class="user-name">Карина</div>
+            <div class="user-sub" id="prizes-count">0 подарков выбито</div>
+        </div>
+        <div class="balance-container">
+            <div class="stars-balance"><span id="balance-num">500</span> ⭐️</div>
+            <button class="deposit-btn" onclick="addStars()">+</button>
+        </div>
+    </div>
+
+    <div class="app-title">Kalis Gift 👑</div>
+    <div class="promo-banner">🔥 ОТКРЫВАЙ КЕЙСЫ И СТАВЬ ПОДАРКИ В ПРОФИЛЬ 🔥</div>
+
+    <div class="cases-grid" id="grid"></div>
+
+    <div class="prize-popup" id="popup">
+        <div style="font-size: 20px; color: #8a99a8;">Ты выиграла подарок:</div>
+        <div class="popup-emoji" id="p-emoji">🧸</div>
+        <div class="popup-name" id="p-name">Медведь</div>
+        <div class="popup-worth" id="p-worth">Ценность: 50 ⭐️</div>
+        <button class="take-btn" onclick="closePopup()">Поставить в профиль</button>
+    </div>
+
+    <script>
+        const boxData = [
+            { id: 1, name: "Star Case", cost: 1, badge: "1 РАЗ В ДЕНЬ", bg: "bg-green", border: "color-green", icon: "⭐", isDaily: true,
+              items: [
+                  { n: "Простая Роза", e: "🌹", w: 25, chance: 60 },
+                  { n: "Вкусный Торт", e: "🎂", w: 50, chance: 35 },
+                  { n: "Плюшевый Мишка", e: "🧸", w: 100, chance: 5 }
+              ]},
+            { id: 2, name: "Capsule Case", cost: 8, badge: "НОВЫЙ", bg: "bg-blue", border: "color-blue", icon: "🧰", 
+              items: [
+                  { n: "Неоновое Сердце", e: "💖", w: 15, chance: 75 },
+                  { n: "Красивая Роза", e: "🌹", w: 25, chance: 20 },
+                  { n: "Кибер-Мишка", e: "🧸", w: 150, chance: 5 }
+              ]},
+            { id: 3, name: "Crime Capsule", cost: 13, badge: "ЛИМИТ", bg: "bg-blue", border: "color-blue", icon: "🧬", 
+              items: [
+                  { n: "Защитная Лента", e: "🖤", w: 30, chance: 70 },
+                  { n: "Полицейский Мишка", e: "🧸", w: 200, chance: 25 },
+                  { n: "Алмазное Сердце", e: "💎", w: 500, chance: 5 }
+              ]},
+            { id: 4, name: "Flex Case", cost: 39, badge: "POP", bg: "bg-purple", border: "color-purple", icon: "📦", 
+              items: [
+                  { n: "Большой Торт", e: "🎂", w: 100, chance: 65 },
+                  { n: "Модные Очки", e: "🕶️", w: 150, chance: 30 },
+                  { n: "Золотое Кольцо", e: "💍", w: 600, chance: 5 }
+              ]},
+            { id: 5, name: "Vision Case", cost: 69, badge: "RARE", bg: "bg-purple", border: "color-purple", icon: "🔮", 
+              items: [
+                  { n: "Светящийся Шар", e: "🔮", w: 150, chance: 60 },
+                  { n: "Мишка в шлеме", e: "🧸", w: 300, chance: 35 },
+                  { n: "Алмазное Кольцо", e: "💍", w: 1000, chance: 5 }
+              ]},
+            { id: 6, name: "Fresh Case", cost: 99, badge: "FRESH", bg: "bg-gold", border: "color-gold", icon: "🏺", 
+              items: [
+                  { n: "Букет Розовых Роз", e: "🌹", w: 300, chance: 55 },
+                  { n: "Золотые Часы", e: "⌚", w: 400, chance: 40 },
+                  { n: "Крутое NFT", e: "🖼️", w: 1500, chance: 5 }
+              ]},
+            { id: 7, name: "Easy Case", cost: 199, badge: "SUPER", bg: "bg-gold", border: "color-gold", icon: "🛸", 
+              items: [
+                  { n: "Праздничный Торт", e: "🎂", w: 400, chance: 50 },
+                  { n: "Огромный Медведь", e: "🧸", w: 700, chance: 45 },
+                  { n: "Редкое NFT", e: "🖼️", w: 2500, chance: 5 }
+              ]},
+            { id: 8, name: "Elite Case", cost: 899, badge: "ELITE", bg: "bg-fire", border: "color-fire", icon: "👑", 
+              items: [
+                  { n: "Кольцо с бриллиантом", e: "💍", w: 1500, chance: 60 },
+                  { n: "Эпическое NFT", e: "🖼️", w: 3000, chance: 35 },
+                  { n: "Золотая Корона", e: "👑", w: 5000, chance: 5 }
+              ]},
+            { id: 9, name: "Profit Case", cost: 1499, badge: "LEGEND", bg: "bg-fire", border: "color-fire", icon: "🎰", 
+              items: [
+                  { n: "Королевский Алмаз", e: "💎", w: 4000, chance: 70 },
+                  { n: "Легендарный Мишка NFT", e: "🖼️", w: 6000, chance: 30 }
+              ]}
+        ];
+
+        let userStars = 5000;
+        let earnedPrizes = 0;
+        let isSpinning = false;
+
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = "";
+            boxData.forEach(box => {
+                const item = document.createElement('div');
+                item.className = `case-item ${box.border}`;
+                item.id = `box-${box.id}`;
+                item.setAttribute('onclick', `buyBox(${box.id})`);
+                item.innerHTML = `
+                    <div class="badge ${box.bg}">${box.badge}</div>
+                    <div class="case-name">${box.name}</div>
+                    <div class="case-img">${box.icon}</div>
+                    <div class="case-cost">${box.cost} ⭐️</div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function buyBox(id) {
+            if(isSpinning) return;
+            const b = boxData.find(x => x.id === id);
+
+            if (b.isDaily) {
+                const lastOpen = localStorage.getItem('last_star_case_time');
+                const now = new Date().getTime();
+                if (lastOpen && (now - lastOpen < 24 * 60 * 60 * 1000)) {
+                    const timeLeft = (24 * 60 * 60 * 1000) - (now - lastOpen);
+                    const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
+                    alert(`Этот кейс доступен раз в день! Осталось ждать: ${hoursLeft} ч.`);
+                    return;
+                }
+            }
+
+            if(userStars < b.cost) {
+                alert("Недостаточно Звёзд! Нажми на плюс вверху, чтобы пополнить баланс.");
+                return;
+            }
+
+            isSpinning = true;
+            userStars -= b.cost;
+            document.getElementById('balance-num').innerText = userStars;
+
+            if (b.isDaily) {
+                localStorage.setItem('last_star_case_time', new Date().getTime());
+            }
+
+            const targetBox = document.getElementById(`box-${id}`);
+            targetBox.classList.add('shaking');
+
+            setTimeout(() => {
+                targetBox.classList.remove('shaking');
+                
+                let rand = Math.floor(Math.random() * 100);
+                let selectedPrize = b.items[0];
+                let cumulativeChance = 0;
+
+                for (let i = 0; i < b.items.length; i++) {
+                    cumulativeChance += b.items[i].chance;
+                    if (rand < cumulativeChance) {
+                        selectedPrize = b.items[i];
+                        break;
+                    }
+                }
+                
+                document.getElementById('p-emoji').innerText = selectedPrize.e;
+                document.getElementById('p-name').innerText = selectedPrize.n;
+                document.getElementById('p-worth').innerText = `Ценность: ${selectedPrize.w} ⭐️`;
+                document.getElementById('popup').style.display = 'flex';
+                
+                earnedPrizes++;
+                document.getElementById('prizes-count').innerText = `${earnedPrizes} подарков выбито`;
+                isSpinning = false;
+            }, 1200);
+        }
+
+        function addStars() {
+            alert("Здесь будет открываться окно официальной оплаты Telegram Stars после привязки бота!");
+        }
+
+        function closePopup() { document.getElementById('popup').style.display = 'none'; }
+        createGrid();
+    </script>
+</body>
+</html>
